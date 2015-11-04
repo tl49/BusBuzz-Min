@@ -22,8 +22,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
 import com.parse.ParseObject;
-//import com.parse.Parse;
-//import com.parse.ParseObject;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
