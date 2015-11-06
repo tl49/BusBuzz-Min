@@ -21,8 +21,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -42,6 +46,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button spaciousButton;
     private Button fullButton;
     private Button busLeftButton;
+
+
+
+    public String median(List<ParseObject> data, String stopName)
+    {
+        double sum = 0;
+        String result = "No data";
+        double count = 0;
+        String name = "";
+
+        for(int i = 0; i < data.size(); i++)
+        {
+           if(data.get(i).getString("Stops").equals(stopName)){
+               count++;
+               if (data.get(i).getString("Status").equals("spacious")) {
+                   sum += 1;
+               } else if (data.get(i).getString("Status").equals("full")) {
+                   sum += 2;
+               }
+           }
+        }
+
+        sum = sum/count;
+
+        if(sum < 1.0)
+        {
+            result = "empty";
+        }
+        else if (sum <2.0 && sum >= 1.0)
+        {
+            result = "spacious";
+        }
+        else if(sum < 3.0 && sum >= 2.0)
+        {
+            result = "full";
+        }
+        else
+        {
+            result = Double.toString(sum);
+        }
+        return result;
+    }
+
 
 
     @Override
@@ -192,10 +239,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-
-
-
-
     }
 
 
@@ -238,8 +281,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Add bus pin
         gilmanMarker = mMap.addMarker(new MarkerOptions().position(Gilman).title("Gilman Dr & Myer's")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus))
-                .snippet("Status:" + ""));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
         regentMarker = mMap.addMarker(new MarkerOptions().position(Nobel_Regent).title("Regent Rd & Nobel Dr")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
         arribaMarker = mMap.addMarker(new MarkerOptions().position(Arriba_Regent).title("Arriba St & Regent Rd")
@@ -293,11 +335,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fullButton.setBackgroundColor(Color.WHITE);
                 fullButton.setTextColor(Color.BLACK);
 
+
+
                 if (marker.equals(gilmanMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
                     text.setText("Gilman Dr & Myer's");
                     stop = gilmanMarker;
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Bus");
+                    query.whereExists("Status");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> statusList, com.parse.ParseException e) {
+                            if (e == null) {
+                                gilmanMarker.setSnippet("Status: " + median(statusList, "Gilman"));
+                                //need to change image
+                            } else {
+                            }
+                        }
+                    });
+
                 } else if (marker.equals(regentMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
@@ -319,6 +377,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     text.setText("Nobel Dr & Lebon Dr");
                     stop = nobelMarker;
                 }
+
 
                 return false;
             }
