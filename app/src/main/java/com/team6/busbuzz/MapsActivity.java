@@ -1,6 +1,7 @@
 package com.team6.busbuzz;
 
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -66,6 +67,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         emptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                emptyButton.setBackgroundColor(Color.BLACK);
+                emptyButton.setTextColor(Color.WHITE);
+                spaciousButton.setBackgroundColor(Color.WHITE);
+                spaciousButton.setTextColor(Color.BLACK);
+                fullButton.setBackgroundColor(Color.WHITE);
+                fullButton.setTextColor(Color.BLACK);
+
 
                 if (stop.equals(gilmanMarker)) {
                     stopObj.put("Routes", "UCSD_Shuttle");
@@ -97,6 +105,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spaciousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                emptyButton.setBackgroundColor(Color.WHITE);
+                emptyButton.setTextColor(Color.BLACK);
+                spaciousButton.setBackgroundColor(Color.BLACK);
+                spaciousButton.setTextColor(Color.WHITE);
+                fullButton.setBackgroundColor(Color.WHITE);
+                fullButton.setTextColor(Color.BLACK);
+
                 if (stop.equals(gilmanMarker)) {
                     stopObj.put("Routes", "UCSD_Shuttle");
                     stopObj.put("Stops", "Gilman");
@@ -124,6 +140,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fullButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                emptyButton.setBackgroundColor(Color.WHITE);
+                emptyButton.setTextColor(Color.BLACK);
+                spaciousButton.setBackgroundColor(Color.WHITE);
+                spaciousButton.setTextColor(Color.BLACK);
+                fullButton.setBackgroundColor(Color.BLACK);
+                fullButton.setTextColor(Color.WHITE);
+
                 if (stop.equals(gilmanMarker)) {
                     stopObj.put("Routes", "UCSD_Shuttle");
                     stopObj.put("Stops", "Gilman");
