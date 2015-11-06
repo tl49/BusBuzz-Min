@@ -67,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         emptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 emptyButton.setBackgroundColor(Color.BLACK);
                 emptyButton.setTextColor(Color.WHITE);
                 spaciousButton.setBackgroundColor(Color.WHITE);
@@ -279,6 +280,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spaciousButton.setVisibility(View.VISIBLE);
                 fullButton.setVisibility(View.VISIBLE);
                 busLeftButton.setVisibility(View.VISIBLE);
+
+                //reset highlight
+                emptyButton.setBackgroundColor(Color.WHITE);
+                emptyButton.setTextColor(Color.BLACK);
+                spaciousButton.setBackgroundColor(Color.WHITE);
+                spaciousButton.setTextColor(Color.BLACK);
+                fullButton.setBackgroundColor(Color.WHITE);
+                fullButton.setTextColor(Color.BLACK);
 
                 if (marker.equals(gilmanMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
