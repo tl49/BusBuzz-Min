@@ -7,5 +7,5 @@
     <string name="spacious_string">Spacious</string>
     <string name="full_string">Full</string>
     <string name="last_bus_string">LAST BUS LEFT:</string>
-    <string name="estimate_string">ESTIMATE ARRIVAL:</string>
+    <string name="estimate_string">REPORT COUNTS:</string>
 </resources>

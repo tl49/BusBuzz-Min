@@ -235,7 +235,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Add bus pin
         gilmanMarker = mMap.addMarker(new MarkerOptions().position(Gilman).title("Gilman Dr & Myer's")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus))
+                .snippet("Status:" + ""));
         regentMarker = mMap.addMarker(new MarkerOptions().position(Nobel_Regent).title("Regent Rd & Nobel Dr")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
         arribaMarker = mMap.addMarker(new MarkerOptions().position(Arriba_Regent).title("Arriba St & Regent Rd")
