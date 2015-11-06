@@ -99,7 +99,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 stopObj.saveInBackground();
-
             }
         });
 
@@ -118,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     stopObj.put("Routes", "UCSD_Shuttle");
                     stopObj.put("Stops", "Gilman");
                     stopObj.put("Status", "spacious");
-                } else if (stop.equals(regentMarker)) {
+                } else if (stop.equals(regentMarker)){
                     stopObj.put("Routes", "UCSD_Shuttle");
                     stopObj.put("Stops", "Regent");
                     stopObj.put("Status", "spacious");
@@ -135,6 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     stopObj.put("Stops", "Nobel");
                     stopObj.put("Status", "spacious");
                 }
+
+                stopObj.saveInBackground();
             }
         });
 
@@ -170,6 +171,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     stopObj.put("Stops", "Nobel");
                     stopObj.put("Status", "full");
                 }
+
+                stopObj.saveInBackground();
             }
         });
 
