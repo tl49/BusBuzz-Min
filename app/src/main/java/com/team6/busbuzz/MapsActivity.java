@@ -70,15 +70,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         sum = sum/count;
 
-        if(sum < 1.0)
+        if(sum < 0.5)
         {
             result = "empty";
         }
-        else if (sum <2.0 && sum >= 1.0)
+        else if (sum <= 1.5 && sum >= 0.5)
         {
             result = "spacious";
         }
-        else if(sum < 3.0 && sum >= 2.0)
+        else if(sum > 1.5)
         {
             result = "full";
         }
