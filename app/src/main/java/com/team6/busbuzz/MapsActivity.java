@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,39 +27,54 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Marker gilmanMarker;
-    private Marker regentMarker;
-    private Marker arribaMarker;
-    private Marker lebonMarker;
-    private Marker nobelMarker;
-    private Marker stop;
+    private Marker gilmanMarker, regentMarker, arribaMarker, lebonMarker, nobelMarker, stop;
 
     //Parse Objects
     private ParseObject stopObj;
 
     //Buttons
-    private Button emptyButton;
-    private Button spaciousButton;
-    private Button fullButton;
-    private Button busLeftButton;
+    private Button emptyButton, spaciousButton, fullButton, busLeftButton;
+
+    private ImageView dImage = (ImageView)findViewById(R.id.imageView2);
+    private ImageView fImage = (ImageView)findViewById(R.id.imageView2);
+    private ImageView sImage = (ImageView)findViewById(R.id.imageView2);
+    private ImageView eImage = (ImageView)findViewById(R.id.imageView2);
 
 
-
-    public String median(List<ParseObject> data, String stopName)
+    public void setImage(String status)
     {
-        double sum = 0;
-        String result = "No data";
-        double count = 0;
-        String name = "";
-
-        for(int i = 0; i < data.size(); i++)
+        if(status == "full")
         {
-           if(data.get(i).getString("Stops").equals(stopName)){
+            fImage.setVisibility(View.VISIBLE);
+        }
+        else if(status == "spacious")
+        {
+            sImage.setVisibility(View.VISIBLE);
+        }
+        else if (status == "empty")
+        {
+            eImage.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            dImage.setVisibility(View.VISIBLE);
+        }
+    }
+    //This function calculate median value and return "string"
+    public String median(List<ParseObject> data, String stopName) {
+        double sum = 0;
+        String result = "";
+        double count = 0;
+
+        for(int i = 0; i < data.size(); i++) {
+           if(data.get(i).getString("Stops").equals(stopName)) {
                count++;
                if (data.get(i).getString("Status").equals("spacious")) {
                    sum += 1;
@@ -67,29 +83,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                }
            }
         }
-
         sum = sum/count;
 
-        if(sum < 0.5)
-        {
+        if(sum < 0.5) {
             result = "empty";
         }
-        else if (sum <= 1.5 && sum >= 0.5)
-        {
+        else if (sum <= 1.5 && sum >= 0.5) {
             result = "spacious";
         }
-        else if(sum > 1.5)
-        {
+        else if(sum > 1.5) {
             result = "full";
         }
-        else
-        {
-            result = Double.toString(sum);
+        else {
+            //result = Double.toString(sum);
+            result = "Not Available";
         }
         return result;
     }
 
+    //This function return last time as a "string"
+    public String lastTime(List<ParseObject> data, String stopName) {
+        for(int i = 0; i < data.size(); i++) {
+            if(data.get(i).getString("Stops").equals(stopName)) {
+                return data.get(i).getString("LastTime");
+            }
+        }
+        return "Not Available";
+    }
 
+    //This function return number of people who voted at that time.
+    public int numberofPeople(List<ParseObject> data, String stopName) {
+        int numPeople = 0;
+
+        for(int i = 0; i < data.size(); i++) {
+            if(data.get(i).getString("Stops").equals(stopName)) {
+                numPeople++;
+            }
+        }
+        return numPeople;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fullButton =  (Button)findViewById(R.id.button3);
         busLeftButton = (Button)findViewById(R.id.button4);
 
-
         emptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spaciousButton.setTextColor(Color.BLACK);
                 fullButton.setBackgroundColor(Color.WHITE);
                 fullButton.setTextColor(Color.BLACK);
-
 
                 if (stop.equals(gilmanMarker)) {
                     stopObj.put("Routes", "UCSD_Shuttle");
@@ -226,21 +256,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         busLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                String lastBus = df.format(c.getTime());
                 if (stop.equals(gilmanMarker)) {
-
+                    stopObj.put("Stops", "Gilman");
+                    stopObj.put("LastTime", lastBus);
                 } else if (stop.equals(regentMarker)) {
-
+                    stopObj.put("Stops", "Regent");
+                    stopObj.put("LastTime", lastBus);
                 } else if (stop.equals(arribaMarker)) {
-
+                    stopObj.put("Stops", "Arriba");
+                    stopObj.put("LastTime", lastBus);
                 } else if (stop.equals(lebonMarker)) {
-
+                    stopObj.put("Stops", "Lebon");
+                    stopObj.put("LastTime", lastBus);
                 } else if (stop.equals(nobelMarker)) {
-
+                    stopObj.put("Stops", "Nobel");
+                    stopObj.put("LastTime", lastBus);
                 }
             }
         });
-    }
 
+    }
 
     /**
      * Manipulates the map once available.
@@ -278,7 +316,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng Lebon_Palmila = new LatLng(32.865053, -117.225050);
         LatLng Nobel_Lebon = new LatLng(32.868551, -117.225306);
 
-
         //Add bus pin
         gilmanMarker = mMap.addMarker(new MarkerOptions().position(Gilman).title("Gilman Dr & Myer's")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
@@ -290,7 +327,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
         nobelMarker  = mMap.addMarker(new MarkerOptions().position(Nobel_Lebon).title("Nobel Dr & Lebon Dr")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
-
 
         //Camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(UCSD));
@@ -336,7 +372,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fullButton.setTextColor(Color.BLACK);
 
 
-
                 if (marker.equals(gilmanMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
@@ -349,7 +384,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         @Override
                         public void done(List<ParseObject> statusList, com.parse.ParseException e) {
                             if (e == null) {
-                                gilmanMarker.setSnippet("Status: " + median(statusList, "Gilman"));
+                                String s = median(statusList, "Gilman");
+                                gilmanMarker.setSnippet("Status: " + s );
+
                                 //need to change image
                             } else {
                             }
@@ -361,21 +398,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     TextView text = (TextView) findViewById(R.id.textView4);
                     text.setText("Regents Rd & Nobel Dr");
                     stop = regentMarker;
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Bus");
+                    query.whereExists("Status");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> statusList, com.parse.ParseException e) {
+                            if (e == null) {
+                                regentMarker.setSnippet("Status: " + median(statusList, "Regent")
+                                        + "Number of People: " + numberofPeople(statusList, "Regent")
+                                + "Last bus time: " + lastTime(statusList, "Regent"));
+                                //need to change image
+                            } else {
+                            }
+                        }
+                    });
+
                 } else if (marker.equals(arribaMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
                     text.setText("Arriba St & Regent Rd");
                     stop = arribaMarker;
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Bus");
+                    query.whereExists("Status");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> statusList, com.parse.ParseException e) {
+                            if (e == null) {
+                                arribaMarker.setSnippet("Status: " + median(statusList, "Arriba"));
+                                //need to change image
+                            } else {
+                            }
+                        }
+                    });
+
                 } else if (marker.equals(lebonMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
                     text.setText("Lebon Dr & Palmila Dr");
                     stop = lebonMarker;
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Bus");
+                    query.whereExists("Status");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> statusList, com.parse.ParseException e) {
+                            if (e == null) {
+                                lebonMarker.setSnippet("Status: " + median(statusList, "Lebon"));
+                                //need to change image
+                            } else {
+                            }
+                        }
+                    });
+
                 } else if (marker.equals(nobelMarker)) {
                     findViewById(R.id.textView4).setVisibility(View.VISIBLE);
                     TextView text = (TextView) findViewById(R.id.textView4);
                     text.setText("Nobel Dr & Lebon Dr");
                     stop = nobelMarker;
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Bus");
+                    query.whereExists("Status");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> statusList, com.parse.ParseException e) {
+                            if (e == null) {
+                                nobelMarker.setSnippet("Status: " + median(statusList, "Nobel"));
+                                //need to change image
+                            } else {
+                            }
+                        }
+                    });
                 }
 
 
