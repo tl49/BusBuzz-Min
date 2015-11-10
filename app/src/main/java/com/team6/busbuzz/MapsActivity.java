@@ -334,6 +334,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                //set textView invisible
                 findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
                 findViewById(R.id.textView4).setVisibility(View.INVISIBLE);
                 findViewById(R.id.textView5).setVisibility(View.INVISIBLE);
@@ -341,10 +342,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 findViewById(R.id.textView7).setVisibility(View.INVISIBLE);
                 findViewById(R.id.textView8).setVisibility(View.INVISIBLE);
                 findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
+                //set buttons invisible
                 emptyButton.setVisibility(View.INVISIBLE);
                 spaciousButton.setVisibility(View.INVISIBLE);
                 fullButton.setVisibility(View.INVISIBLE);
                 busLeftButton.setVisibility(View.INVISIBLE);
+                //set image invisible
+                eImage.setVisibility(View.INVISIBLE);
+                sImage.setVisibility(View.INVISIBLE);
+                fImage.setVisibility(View.INVISIBLE);
+                dImage.setVisibility(View.INVISIBLE);
+
+
 
             }
         });
@@ -363,13 +372,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fullButton.setVisibility(View.VISIBLE);
                 busLeftButton.setVisibility(View.VISIBLE);
 
-                //reset highlight
+                //reset button highlight
                 emptyButton.setBackgroundColor(Color.WHITE);
                 emptyButton.setTextColor(Color.BLACK);
                 spaciousButton.setBackgroundColor(Color.WHITE);
                 spaciousButton.setTextColor(Color.BLACK);
                 fullButton.setBackgroundColor(Color.WHITE);
                 fullButton.setTextColor(Color.BLACK);
+
 
 
                 if (marker.equals(gilmanMarker)) {
@@ -384,9 +394,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         @Override
                         public void done(List<ParseObject> statusList, com.parse.ParseException e) {
                             if (e == null) {
-                                String s = median(statusList, "Gilman");
-                                gilmanMarker.setSnippet("Status: " + s );
-
+                                String status = median(statusList, "Gilman");
+                                gilmanMarker.setSnippet("Status: " + status );
+                                setImage(status);
                                 //need to change image
                             } else {
                             }
@@ -409,6 +419,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         + "Number of People: " + numberofPeople(statusList, "Regent")
                                 + "Last bus time: " + lastTime(statusList, "Regent"));
                                 //need to change image
+                                String status = median(statusList, "Regent");
+                                gilmanMarker.setSnippet("Status: " + status );
+                                setImage(status);
                             } else {
                             }
                         }
@@ -428,6 +441,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (e == null) {
                                 arribaMarker.setSnippet("Status: " + median(statusList, "Arriba"));
                                 //need to change image
+                                String status = median(statusList, "Arriba");
+                                gilmanMarker.setSnippet("Status: " + status );
+                                setImage(status);
                             } else {
                             }
                         }
@@ -447,6 +463,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (e == null) {
                                 lebonMarker.setSnippet("Status: " + median(statusList, "Lebon"));
                                 //need to change image
+                                String status = median(statusList, "Lebon");
+                                gilmanMarker.setSnippet("Status: " + status );
+                                setImage(status);
                             } else {
                             }
                         }
@@ -466,6 +485,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (e == null) {
                                 nobelMarker.setSnippet("Status: " + median(statusList, "Nobel"));
                                 //need to change image
+                                String status = median(statusList, "Nobel");
+                                gilmanMarker.setSnippet("Status: " + status );
+                                setImage(status);
                             } else {
                             }
                         }
